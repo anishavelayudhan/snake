@@ -77,7 +77,16 @@ public class Game {
     }
 
 
+    private void restartGame() {
+        // Reset snake and apple positions
+        snake.reset();
+        apple.randomizePos(snake);
 
+        // Restart game timer
+        start();
+    }
+
+    
     private void start() {
         TimerTask moveTask = new TimerTask() {
             @Override

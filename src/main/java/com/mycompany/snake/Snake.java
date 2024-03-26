@@ -93,20 +93,14 @@ public class Snake {
         return 0;
     }
     
-    
-//    // Testcode:
-//    public static void main(String[] args) {
-//        Snake aSnake = new Snake();
-//        System.out.println(aSnake.body);
-//        System.out.println("Move");
-//        aSnake.move();
-//        System.out.println(aSnake.body);
-//        System.out.println("Move");
-//        aSnake.move();
-//        System.out.println(aSnake.body);
-//        System.out.println("Move");
-//        aSnake.move();
-//        System.out.println(aSnake.body);
-//    }
+    // Method to reset the snake's position and direction
+    public void reset() {
+        this.body.clear();
+        for (int i = 0; i < 3; i++) {
+            this.body.add(new Segment(startX + i, startY));
+        }
+        this.direction = 'R';
+        this.checkCollision = false;
+    }   
     
 }
