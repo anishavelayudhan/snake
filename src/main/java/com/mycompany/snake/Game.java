@@ -14,8 +14,8 @@ import java.util.TimerTask;
  * @author anishavelayudhan
  */
 public class Game {
-    int gridHeight = 10;
-    int gridWidth = 20;
+    int gridHeight = 15;
+    int gridWidth = 15;
     JFrame frame;
     GamePanel gamePanel;
     Snake snake;

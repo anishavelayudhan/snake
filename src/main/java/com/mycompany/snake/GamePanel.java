@@ -16,7 +16,7 @@ public class GamePanel extends JPanel {
 
     public GamePanel(Game game) {
         this.game = game;
-        setPreferredSize(new Dimension(800, 400)); 
+        setPreferredSize(new Dimension(450, 450)); 
     }
 
     @Override
