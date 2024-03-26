@@ -99,9 +99,19 @@ public class Game {
                 } else {
                     cancel();
                     if (snake.checkCollision) {
-                        JOptionPane.showMessageDialog(frame, "GAME OVER!");
+                        int choice = JOptionPane.showConfirmDialog(frame, "GAME OVER! Do you want to restart?", "Game Over", JOptionPane.YES_NO_OPTION);
+                        if (choice == JOptionPane.YES_OPTION) {
+                            restartGame();
+                        } else {
+                            System.exit(0);
+                        }
+                    }
                     } else if (snake.snakeMax()) {
-                       JOptionPane.showMessageDialog(frame, "CONGRATULATIONS! YOU WON THE GAME!");
+                       int choice = JOptionPane.showConfirmDialog(frame, "CONGRATULATIONS! YOU WON THE GAME! Do you want to restart?", "Congratulations", JOptionPane.YES_NO_OPTION);
+                        if (choice == JOptionPane.YES_OPTION) {
+                            restartGame();
+                        } else {
+                            System.exit(0);
                     }
                 }
             }
