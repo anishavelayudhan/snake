@@ -4,6 +4,7 @@
 
 package com.mycompany.snake;
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Timer;
@@ -19,8 +20,9 @@ public class Game {
     JFrame frame;
     GamePanel gamePanel;
     Snake snake;
-    Apple apple;    
-
+    Apple apple;
+    int score;
+    JLabel scoreText = new JLabel("Score: " + score);
 
 
     // Input
@@ -31,12 +33,18 @@ public class Game {
 
         gamePanel = new GamePanel(this);
         JFrame frame = new JFrame("Snake Game");
+        JPanel scorePanel = new JPanel();
+        scorePanel.setBackground(Color.BLACK);
+        scoreText.setForeground(Color.gray);
+        scorePanel.add(scoreText);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.add(gamePanel);
+        frame.setLayout(new BorderLayout());
+        frame.add(gamePanel, BorderLayout.SOUTH);
+        frame.add(scorePanel, BorderLayout.NORTH);
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-        frame.setFocusable(true); 
+        frame.setFocusable(true);
         frame.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
@@ -76,17 +84,20 @@ public class Game {
         start();
     }
 
+    private int scoreGame(Snake snake) {
+        return score += 100;
+    }
 
     private void restartGame() {
         // Reset snake and apple positions
         snake.reset();
         apple.randomizePos(snake);
-
+        score = 0;
         // Restart game timer
         start();
     }
 
-    
+
     private void start() {
         TimerTask moveTask = new TimerTask() {
             @Override
@@ -94,21 +105,21 @@ public class Game {
                 if (!snake.checkCollision && !snake.snakeMax()) {
                     if (snake.move(apple.getX(), apple.getY())){
                         apple.randomizePos(snake);
-                    }                  
+                        scoreGame(snake);
+                    }
                     gamePanel.repaint();
+                    scoreText.setText("Score: " + score);
                 } else {
                     cancel();
                     if (snake.checkCollision) {
-                        JOptionPane.showMessageDialog(frame, "GAME OVER!");
-                        int choice = JOptionPane.showConfirmDialog(frame, "GAME OVER! Do you want to restart?", "Game Over", JOptionPane.YES_NO_OPTION);
+                        int choice = JOptionPane.showConfirmDialog(frame, "GAME OVER!" + "\n\n" + "Do you want to restart?", "Game Over", JOptionPane.YES_NO_OPTION);
                         if (choice == JOptionPane.YES_OPTION) {
                             restartGame();
                         } else {
                             System.exit(0);
                         }
                     } else if (snake.snakeMax()) {
-                       JOptionPane.showMessageDialog(frame, "CONGRATULATIONS! YOU WON THE GAME!");
-                        int choice = JOptionPane.showConfirmDialog(frame, "CONGRATULATIONS! YOU WON THE GAME! Do you want to restart?", "Congratulations", JOptionPane.YES_NO_OPTION);
+                        int choice = JOptionPane.showConfirmDialog(frame, "CONGRATULATIONS! YOU WON THE GAME!" + "\n\n" + "Do you want to restart?", "Congratulations", JOptionPane.YES_NO_OPTION);
                         if (choice == JOptionPane.YES_OPTION) {
                             restartGame();
                         } else {
@@ -130,7 +141,7 @@ public class Game {
             public void run() {
                 Game game = new Game();
             }
-        });   
+        });
     }
 
 }
