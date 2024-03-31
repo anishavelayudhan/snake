@@ -20,7 +20,7 @@ public class Snake {
     boolean checkCollision;
     
     
-    public Snake(int maxX, int maxY){
+    public Snake(int maxX, int maxY) {
         this.maxX = maxX;
         this.maxY = maxY;
         this.body = new ArrayList<>();
@@ -31,7 +31,7 @@ public class Snake {
     } 
     
     // check if snake is the size of game grid
-    public boolean snakeMax(){
+    public boolean snakeMax() {
         return this.body.size() == (maxX * maxY);
     }
     
@@ -46,7 +46,7 @@ public class Snake {
     }
     
     // moves snake
-    public boolean move(int x, int y){
+    public boolean move(int x, int y) {
         int newX = body.get(this.body.size() - 1).getX() + deltaX();
         int newY = body.get(this.body.size() - 1).getY() + deltaY();
         
@@ -64,7 +64,7 @@ public class Snake {
     
     
     // check if snake is colliding with itself
-    private boolean checkCollision(int x, int y){
+    private boolean checkCollision(int x, int y) {
         for (int i = 0; i < this.body.size(); i++){
             if (this.body.get(i).getX() == x && this.body.get(i).getY() == y){
                 return this.checkCollision = true;
@@ -73,7 +73,7 @@ public class Snake {
     }
     
 
-    private int deltaX(){
+    private int deltaX() {
         if (direction == 'L'){
             return - 1;
         }
@@ -83,7 +83,7 @@ public class Snake {
         return 0;
     }
     
-    private int deltaY(){
+    private int deltaY() {
         if (direction == 'U'){
             return - 1;
         }
