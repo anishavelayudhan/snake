@@ -37,10 +37,10 @@ public class Game {
         apple.randomizePos(snake);
 
         gamePanel = new GamePanel(this);
-        JFrame frame = new JFrame("Snake Game");
+        JFrame frame = new JFrame("Snake - by Anisha");
         JPanel scorePanel = new JPanel();
-        scorePanel.setBackground(Color.BLACK);
-        scoreText.setForeground(Color.gray);
+        scorePanel.setBackground(new Color(39,58,19));
+        scoreText.setForeground(new Color(150,190,90,250));
         scorePanel.add(scoreText);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());

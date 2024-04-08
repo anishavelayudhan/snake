@@ -7,7 +7,7 @@ import java.util.Random;
 
 /**
  *
- * @author Anisha Velayudhan
+ * @author anishavelayudhan
  */
 public class Apple {
     int x;
