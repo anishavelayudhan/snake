@@ -24,6 +24,7 @@ public class Game {
     Snake snake;
     Apple apple;
     int score;
+    boolean paused = false;
     int speed = 300;
     int delay = 500;
     JLabel scoreText = new JLabel("Score: " + score);
@@ -80,27 +81,15 @@ public class Game {
                             snake.direction = 'R';
                         }
                         break;
-                    case KeyEvent.VK_SPACE:
-                        scheduler.shutdown();
-                        int pause = JOptionPane.showConfirmDialog(frame, "GAME PAUSED" + "\n" + "YES to resume, NO to quit", "GAME PAUSED", JOptionPane.YES_NO_OPTION);
-                        if (pause == JOptionPane.YES_OPTION) {
-                            scheduler = Executors.newScheduledThreadPool(1);
-                            start();
-                            break;
-                        } else {
-                            System.exit(0);
-                            break;
-                        }
                     case KeyEvent.VK_ESCAPE:
-                        scheduler.shutdown();
-                        int quit = JOptionPane.showConfirmDialog(frame, "GAME PAUSED" + "\n\n" + "Are you sure that you want to quit?", "GAME PAUSED", JOptionPane.YES_NO_OPTION);
-                        if (quit == JOptionPane.YES_OPTION) {
-                            System.exit(0);
-                            break;
+                        paused = !paused;
+                        if (paused) {
+                            scheduler.shutdown();
+                            scoreText.setText("GAME PAUSED");
                         } else {
                             scheduler = Executors.newScheduledThreadPool(1);
                             start();
-                            break;
+                            scoreText.setText("Score: " + score);
                         }
                 }
             }
@@ -112,8 +101,8 @@ public class Game {
         start();
     }
 
-    private int scoreGame(Snake snake) {
-        return score += 100;
+    private void scoreGame(Snake snake) {
+        score += 100;
     }
 
     private void restartGame() {
@@ -130,32 +119,35 @@ public class Game {
     }
 
     private void start() {
-        final Runnable startGame = new Runnable() {
-            @Override
-            public void run() {
-                if (!snake.checkCollision && !snake.snakeMax()) {
-                    if (snake.move(apple.getX(), apple.getY())){
-                        apple.randomizePos(snake);
-                        scoreGame(snake);
-                        increaseSpeed();
+        final Runnable startGame = () -> {
+            if (!snake.checkCollision && !snake.snakeMax()) {
+                if (snake.move(apple.getX(), apple.getY())){
+                    apple.randomizePos(snake);
+                    scoreGame(snake);
+                    increaseSpeed();
+                }
+                gamePanel.repaint();
+                scoreText.setText("Score: " + score);
+            } else {
+                if (snake.checkCollision) {
+                    int choice = JOptionPane.showConfirmDialog(frame, """
+                            GAME OVER!
+
+                            Do you want to restart?""", "Game Over", JOptionPane.YES_NO_OPTION);
+                    if (choice == JOptionPane.YES_OPTION) {
+                        restartGame();
+                    } else {
+                        System.exit(0);
                     }
-                    gamePanel.repaint();
-                    scoreText.setText("Score: " + score);
-                } else {
-                    if (snake.checkCollision) {
-                        int choice = JOptionPane.showConfirmDialog(frame, "GAME OVER!" + "\n\n" + "Do you want to restart?", "Game Over", JOptionPane.YES_NO_OPTION);
-                        if (choice == JOptionPane.YES_OPTION) {
-                            restartGame();
-                        } else {
-                            System.exit(0);
-                        }
-                    } else if (snake.snakeMax()) {
-                        int choice = JOptionPane.showConfirmDialog(frame, "CONGRATULATIONS! YOU WON THE GAME!" + "\n\n" + "Do you want to restart?", "Congratulations", JOptionPane.YES_NO_OPTION);
-                        if (choice == JOptionPane.YES_OPTION) {
-                            restartGame();
-                        } else {
-                            System.exit(0);
-                        }
+                } else if (snake.snakeMax()) {
+                    int choice = JOptionPane.showConfirmDialog(frame, """
+                            CONGRATULATIONS! YOU WON THE GAME!
+
+                            Do you want to restart?""", "Congratulations", JOptionPane.YES_NO_OPTION);
+                    if (choice == JOptionPane.YES_OPTION) {
+                        restartGame();
+                    } else {
+                        System.exit(0);
                     }
                 }
             }
@@ -174,11 +166,8 @@ public class Game {
 
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable(){
-            @Override
-            public void run() {
-                Game game = new Game();
-            }
+        SwingUtilities.invokeLater(() -> {
+            Game game = new Game();
         });
     }
 
