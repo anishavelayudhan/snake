@@ -10,8 +10,8 @@ public class GamePanel extends JPanel {
     private final Game game;
     private final Color snakeColor = new Color(39,58,19);
     private final Color appleColor = new Color(39,58,19);
-    private final Color gridLineColor = new Color(150,190,90,250);
-    private final Color backgroundColor = new Color(155,196,92,255);
+    private final Color gridLineColor = new Color(136, 173, 78);
+    private final Color backgroundColor = new Color(155,196,92);
 
     public GamePanel(Game game) {
         this.game = game;
