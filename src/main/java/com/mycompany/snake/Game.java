@@ -7,7 +7,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.*;
 import java.util.concurrent.*;
+
 
 import static java.util.concurrent.TimeUnit.*;
 
@@ -28,7 +30,7 @@ public class Game {
     int speed = 300;
     int delay = 500;
     JLabel scoreText = new JLabel("Score: " + score);
-
+    Deque<Character> queue = new LinkedList<>();
 
 
     // Input
@@ -43,6 +45,7 @@ public class Game {
         scorePanel.setBackground(new Color(39,58,19));
         scoreText.setForeground(new Color(150,190,90,250));
         scorePanel.add(scoreText);
+
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
         frame.add(gamePanel, BorderLayout.SOUTH);
@@ -52,6 +55,7 @@ public class Game {
         frame.setVisible(true);
         frame.setFocusable(true);
         frame.setResizable(false);
+
         frame.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
@@ -62,23 +66,42 @@ public class Game {
                 // Handle key presses and update snake direction
                 switch (e.getKeyCode()) {
                     case KeyEvent.VK_UP:
-                        if (snake.direction != 'D'){
-                            snake.direction = 'U';
+                        if (queue.isEmpty()) {
+                            if (snake.direction != 'D'){
+                                queue.add('U');
+                            }
+                        } else if (queue.peekLast() != 'D') {
+                            queue.add('U');
                         }
                         break;
                     case KeyEvent.VK_DOWN:
-                        if (snake.direction != 'U'){
-                            snake.direction = 'D';
+                        if (queue.isEmpty()) {
+                            if (snake.direction != 'U'){
+                                queue.add('D');
+                            }
+                        }
+                        else if (queue.peekLast() != 'U') {
+                            queue.add('D');
                         }
                         break;
                     case KeyEvent.VK_LEFT:
-                        if (snake.direction != 'R'){
-                            snake.direction = 'L';
+                        if (queue.isEmpty()) {
+                            if (snake.direction != 'R'){
+                                queue.add('L');
+                            }
+                        }
+                        else if (queue.peekLast() != 'R') {
+                            queue.add('L');
                         }
                         break;
                     case KeyEvent.VK_RIGHT:
-                        if (snake.direction != 'L') {
-                            snake.direction = 'R';
+                        if (queue.isEmpty()) {
+                            if (snake.direction != 'L'){
+                                queue.add('R');
+                            }
+                        }
+                        else if (queue.peekLast() != 'L') {
+                            queue.add('R');
                         }
                         break;
                     case KeyEvent.VK_ESCAPE:
@@ -121,7 +144,8 @@ public class Game {
     private void start() {
         final Runnable startGame = () -> {
             if (!snake.checkCollision && !snake.snakeMax()) {
-                if (snake.move(apple.getX(), apple.getY())){
+                if (!queue.isEmpty()) snake.direction = queue.poll();
+                if (snake.move(apple.getX(), apple.getY())) {
                     apple.randomizePos(snake);
                     scoreGame(snake);
                     increaseSpeed();
@@ -156,7 +180,7 @@ public class Game {
         ScheduledFuture<?> timer = scheduler.scheduleAtFixedRate(startGame, delay, speed, MILLISECONDS);
     }
 
-    public void increaseSpeed(){
+    public void increaseSpeed() {
         this.speed = speed - 1;
         this.delay = speed;
         scheduler.shutdown();
