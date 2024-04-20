@@ -3,6 +3,8 @@
  */
 
 package com.mycompany.snake;
+import com.formdev.flatlaf.*;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -63,6 +65,7 @@ public class Game {
 
         gamePanel = new GamePanel(this);
         frame = new JFrame("Snake");
+        frame.setIconImage(new ImageIcon(getClass().getResource("/snake-icon.png")).getImage());
         JPanel scorePanel = new JPanel();
         scorePanel.setBackground(new Color(39, 58, 19));
         scoreText.setForeground(new Color(155, 196, 92));
@@ -197,8 +200,6 @@ public class Game {
             } else {
                 if (snake.checkCollision) {
                     int choice = JOptionPane.showConfirmDialog(frame, """
-                            GAME OVER!
-
                             Do you want to restart?""", "Game Over", JOptionPane.YES_NO_OPTION);
                     if (choice == JOptionPane.YES_OPTION) {
                         restartGame();
@@ -232,6 +233,11 @@ public class Game {
 
 
     public static void main(String[] args) {
+        try {
+            UIManager.setLookAndFeel(new FlatLightLaf());
+        } catch (UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        }
         SwingUtilities.invokeLater(() -> {
             Game game = new Game();
         });
