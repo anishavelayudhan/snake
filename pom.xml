@@ -11,4 +11,11 @@
         <maven.compiler.target>17</maven.compiler.target>
         <exec.mainClass>com.mycompany.snake.Snake</exec.mainClass>
     </properties>
+    <dependencies>
+    <dependency>
+            <groupId>com.formdev</groupId>
+            <artifactId>flatlaf</artifactId>
+            <version>3.4.1</version>
+        </dependency>
+    </dependencies>
 </project>
