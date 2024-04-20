@@ -24,7 +24,7 @@ public class Snake {
         this.maxX = maxX;
         this.maxY = maxY;
         this.body = new ArrayList<>();
-        for (int i = 0; i < 3; i++){
+        for (int i = 0; i < 3; i++) {
             this.body.add(new Segment(startX + i, startY));
         }
         this.direction = 'R';  
@@ -37,7 +37,7 @@ public class Snake {
     
     // check location of snake
     public boolean onPosition (int x, int y) {
-        for (int i = 0; i < this.body.size(); i++){
+        for (int i = 0; i < this.body.size(); i++) {
             if (this.body.get(i).getX() == x && this.body.get(i).getY() == y){
                 return true;
             }   
@@ -53,7 +53,7 @@ public class Snake {
         newX = (newX + maxX) % maxX;
         newY = (newY + maxY) % maxY;
         
-        if (!checkCollision(newX, newY)){
+        if (!checkCollision(newX, newY)) {
             body.add( new Segment(newX,newY));
             
             if (newX == x && newY == y) {
@@ -65,8 +65,8 @@ public class Snake {
     
     // check if snake is colliding with itself
     private boolean checkCollision(int x, int y) {
-        for (int i = 0; i < this.body.size(); i++){
-            if (this.body.get(i).getX() == x && this.body.get(i).getY() == y){
+        for (int i = 0; i < this.body.size(); i++) {
+            if (this.body.get(i).getX() == x && this.body.get(i).getY() == y) {
                 return this.checkCollision = true;
             }
         } return this.checkCollision = false;
@@ -74,20 +74,20 @@ public class Snake {
     
 
     private int deltaX() {
-        if (direction == 'L'){
+        if (direction == 'L') {
             return - 1;
         }
-        if (direction == 'R'){
+        if (direction == 'R') {
             return + 1;
         }
         return 0;
     }
     
     private int deltaY() {
-        if (direction == 'U'){
+        if (direction == 'U') {
             return - 1;
         }
-        if (direction == 'D'){
+        if (direction == 'D') {
             return + 1;
         }
         return 0;
