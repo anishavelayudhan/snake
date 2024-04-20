@@ -112,41 +112,45 @@ public class Game {
                     keyPressed = true;
                     switch (e.getKeyCode()) {
                         case KeyEvent.VK_UP:
-                            if (queue.isEmpty()) {
-                                if (snake.direction != 'D' && snake.direction != 'U')  {
+                            if (!paused) {
+                                if (queue.isEmpty()) {
+                                    if (snake.direction != 'D' && snake.direction != 'U') {
+                                        queue.add('U');
+                                    }
+                                } else if (queue.peekLast() != 'D' && queue.peekLast() != 'U') {
                                     queue.add('U');
                                 }
-                            } else if (queue.peekLast() != 'D' && queue.peekLast() != 'U') {
-                                queue.add('U');
-                            }
-                            break;
+                            } break;
                         case KeyEvent.VK_DOWN:
-                            if (queue.isEmpty()) {
-                                if (snake.direction != 'U'  && snake.direction != 'D') {
+                            if (!paused) {
+                                if (queue.isEmpty()) {
+                                    if (snake.direction != 'U' && snake.direction != 'D') {
+                                        queue.add('D');
+                                    }
+                                } else if (queue.peekLast() != 'U' && queue.peekLast() != 'D') {
                                     queue.add('D');
                                 }
-                            } else if (queue.peekLast() != 'U' && queue.peekLast() != 'D') {
-                                queue.add('D');
-                            }
-                            break;
+                            } break;
                         case KeyEvent.VK_LEFT:
-                            if (queue.isEmpty()) {
-                                if (snake.direction != 'R' && snake.direction != 'L') {
+                            if (!paused) {
+                                if (queue.isEmpty()) {
+                                    if (snake.direction != 'R' && snake.direction != 'L') {
+                                        queue.add('L');
+                                    }
+                                } else if (queue.peekLast() != 'R' && queue.peekLast() != 'L') {
                                     queue.add('L');
                                 }
-                            } else if (queue.peekLast() != 'R' && queue.peekLast() != 'L') {
-                                queue.add('L');
-                            }
-                            break;
+                            } break;
                         case KeyEvent.VK_RIGHT:
-                            if (queue.isEmpty()) {
-                                if (snake.direction != 'L' && snake.direction != 'R') {
+                            if (!paused) {
+                                if (queue.isEmpty()) {
+                                    if (snake.direction != 'L' && snake.direction != 'R') {
+                                        queue.add('R');
+                                    }
+                                } else if (queue.peekLast() != 'L' && queue.peekLast() != 'R') {
                                     queue.add('R');
                                 }
-                            } else if (queue.peekLast() != 'L'  && queue.peekLast() != 'R') {
-                                queue.add('R');
-                            }
-                            break;
+                            } break;
                         case KeyEvent.VK_ESCAPE:
                             paused = !paused;
                             if (paused) {
