@@ -55,7 +55,7 @@ public class GamePanel extends JPanel {
                 // Draw snake
                 if (game.snake.onPosition(x, y)) {
                     g2d.setColor(snakeColor);
-                    g2d.fillRoundRect(xPos, yPos, cellWidth, cellHeight, 0, 0);
+                    g2d.fillRoundRect(xPos + 1, yPos + 1, cellWidth - 2, cellHeight - 2, 0, 0);
                 } else if (x == game.apple.getX() && y == game.apple.getY()) {
                     g2d.setColor(gridLineColor);
                     g2d.fillRect(xPos, yPos, cellWidth, cellHeight);
