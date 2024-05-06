@@ -1,5 +1,5 @@
 # 🎮 Welcome to Snake!
-
+![demo.png](https://i.imgur.com/6HjByx6.png)
 Step back into the classic era of gaming with Snake! This project, born out of a traineeship where I combined my love for visual design with coding, aims to bring back the joy of old-school gameplay in a modern context.
 <br/><br/>
 
@@ -20,12 +20,6 @@ Snake offers a nostalgic journey reminiscent of arcade days. Navigate through ch
 - Restart the game after game over
 <br/><br/>
 
-## Photos
-
-Witness the timeless appeal of Snake in action:
-
-![demo.png](https://i.imgur.com/6HjByx6.png)
-<br/><br/>
 ## Technologies Used
 
 - Java
@@ -58,11 +52,12 @@ java Game
 ```
 <br/>
 
-## Usage
+## Game Usage
 
 - Use the arrow keys (up, down, left, right) to control the snake's movement.
 - Devour the apples to increase your score and snake length.
 - ESC key pauses the game for a moment of respite.
+- SPACEBAR to change themes.
 - Beware of collisions with walls or the snake's body, which ends the game.
 - Get ready for increased speed as you feast on more apples!
 <br/><br/>
