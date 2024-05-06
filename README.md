@@ -28,8 +28,9 @@ Snake offers a nostalgic journey reminiscent of arcade days. Navigate through ch
 
 ## Installation
 
-Begin playing Snake with these straightforward steps:
-
+Begin playing Snake with downloading the latest release from the [Releases](https://github.com/anishavelayudhan/snake/releases) page.
+<br/><br/>
+or:
 1. Ensure you have Java Development Kit (JDK) installed on your system.
 2. Clone the repository with your IDE:
 ```
@@ -71,7 +72,7 @@ Do you want to enhance the Snake experience? Follow these steps to contribute:
 
 ## License
 
-Ready to relive the thrill? Snake is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Ready to relive the thrill? Snake is licensed under the MIT License.
 
 ## Contact
 
