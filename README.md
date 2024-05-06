@@ -28,10 +28,10 @@ Snake offers a nostalgic journey reminiscent of arcade days. Navigate through ch
 
 ## Installation
 
-Embark on your Retro Snake Game adventure with these simple steps:
+Begin playing Snake with these straightforward steps:
 
 1. Ensure you have Java Development Kit (JDK) installed on your system.
-2. Clone the repository:
+2. Clone the repository with your IDE:
 ```
 git clone https://github.com/anishavelayudhan/snake.git
 ```
@@ -48,7 +48,7 @@ javac *.java
 
 5. Run the game:
 ```
-java Game
+java -jar out/artifacts/snake_jar/snake.jar
 ```
 <br/>
 
@@ -64,7 +64,7 @@ java Game
 
 ## Contributing
 
-Elevate the Retro Snake Game experience with your creativity and passion! Follow these steps to contribute:
+Do you want to enhance the Snake experience? Follow these steps to contribute:
 
 1. Fork the repository.
 2. Create a new branch (`git checkout -b feature/your-feature`).
