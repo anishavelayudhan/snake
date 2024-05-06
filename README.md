@@ -41,12 +41,7 @@ git clone https://github.com/anishavelayudhan/snake.git
 cd snake
 ```
 
-4. Compile the Java files:
-```
-javac *.java
-```
-
-5. Run the game:
+4. Run the game:
 ```
 java -jar out/artifacts/snake_jar/snake.jar
 ```
@@ -58,7 +53,7 @@ java -jar out/artifacts/snake_jar/snake.jar
 - Devour the apples to increase your score and snake length.
 - ESC key pauses the game for a moment of respite.
 - SPACEBAR to change themes.
-- Beware of collisions with walls or the snake's body, which ends the game.
+- Beware of collisions with the snake's body, which ends the game.
 - Get ready for increased speed as you feast on more apples!
 <br/><br/>
 
