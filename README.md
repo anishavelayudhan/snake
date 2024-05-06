@@ -20,11 +20,11 @@ Snake offers a nostalgic journey reminiscent of arcade days. Navigate through ch
 - Restart the game after game over
 <br/><br/>
 
-## Demo
+## Photos
 
 Witness the timeless appeal of Snake in action:
 
-![Snake Game Demo](demo.gif)
+![demo.png](https://i.imgur.com/6HjByx6.png)
 <br/><br/>
 ## Technologies Used
 
