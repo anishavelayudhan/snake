@@ -5,33 +5,14 @@
 package com.mycompany.snake;
 
 /**
- *
  * @author anishavelayudhan
  */
-public class Segment {
-    private int x;
-    private int y;
-    // character print 
-
-    public Segment(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
-    
-    public int getX() {
-        return this.x; 
-    }
-
-    public int getY() {
-        return this.y; 
-    }
+public record Segment(int x, int y, char direction) {
 
     @Override
     public String toString() {
         return "Segment{" + "x=" + x + ", y=" + y + '}';
     }
-    
-    
-}
 
-// segment, snake, apple, food hebben iets gelijk > dat zijn de coordinaten. Maak een andere object
+
+}

@@ -14,6 +14,7 @@ public class Apple {
     int y;
     int gridWidth;
     int gridHeight;
+    Random r = new Random();
     
     public Apple(int gridWidth, int gridHeight) {
         this.gridWidth = gridWidth;
@@ -22,7 +23,6 @@ public class Apple {
     
     // randomize apple position
     public void randomizePos(Snake snake) {
-        Random r = new Random();
         do {
             this.x = r.nextInt(gridWidth);
             this.y = r.nextInt(gridHeight);

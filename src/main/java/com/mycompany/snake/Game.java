@@ -3,18 +3,21 @@
  */
 
 package com.mycompany.snake;
-import com.formdev.flatlaf.*;
+
+import com.formdev.flatlaf.FlatLightLaf;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.InputStream;
-import java.util.*;
-import java.util.concurrent.*;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.Objects;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
-
-import static java.util.concurrent.TimeUnit.*;
+import static java.util.concurrent.TimeUnit.MICROSECONDS;
+import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
 /**
  *
@@ -24,76 +27,34 @@ public class Game {
     ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     int gridHeight = 17;
     int gridWidth = 17;
-    JFrame frame;
+    private final JFrame frame;
     GamePanel gamePanel;
     Snake snake;
     Apple apple;
-    int score;
-    boolean keyPressed;
+    private int score;
+    private int highScore;
+    private int index = 1;
     boolean paused = false;
-    private int speed = 200000;
-    private int delay = 200000;
+    private int speed = 250000;
+    private int delay = 250000;
     JLabel scoreText = new JLabel("Score: " + score);
 
     Deque<Character> queue = new LinkedList<>();
-    Font bitmapFont;
 
 
     // Input
     public Game() {
-        JLabel instructions = new JLabel("Use arrow keys to move and ESC to pause.");
-        JLabel credits = new JLabel("By Anisha Velayudhan");
-        try {
-            // Load font file from resources
-            InputStream fontStream = getClass().getResourceAsStream("/nokiafc22.ttf");
-            bitmapFont = Font.createFont(Font.TRUETYPE_FONT, fontStream);
-
-            // Set the font size as needed
-            bitmapFont = bitmapFont.deriveFont(Font.PLAIN, 12);
-
-            // Set the font for the scoreText label
-            scoreText.setFont(bitmapFont);
-            instructions.setFont(bitmapFont);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        scoreText.setVerticalAlignment(JLabel.BOTTOM);
-        scoreText.setBorder(BorderFactory.createEmptyBorder(3, 0, 0, 0));
         snake = new Snake(gridWidth, gridHeight);
         apple = new Apple(gridWidth, gridHeight);
         apple.randomizePos(snake);
 
         gamePanel = new GamePanel(this);
+        gamePanel.setTheme(index);
         frame = new JFrame("Snake");
-        frame.setIconImage(new ImageIcon(getClass().getResource("/snake-icon.png")).getImage());
-        JPanel scorePanel = new JPanel();
-        scorePanel.setBackground(new Color(39, 58, 19));
-        scoreText.setForeground(new Color(155, 196, 92));
-        scorePanel.add(scoreText);
+        frame.setIconImage(new ImageIcon(Objects.requireNonNull(getClass().getResource("/snake-icon.png"))).getImage());
 
-        JPanel instructionsPanel = new JPanel(new BorderLayout());
-        instructionsPanel.setBackground(new Color(155, 196, 92));
-        credits.setForeground(new Color(119, 154, 68));
-        instructions.setForeground(new Color(87, 116, 48));
-
-        // Center align the instructions label
-        JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        centerPanel.setBackground(new Color(155, 196, 92));
-        centerPanel.add(instructions);
-        instructionsPanel.add(centerPanel, BorderLayout.CENTER);
-
-        // Right align the credits label
-        JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        rightPanel.setBackground(new Color(155, 196, 92));
-        rightPanel.add(credits);
-        rightPanel.setBorder(BorderFactory.createEmptyBorder(40, 0, 0, 0));
-        instructionsPanel.add(rightPanel, BorderLayout.SOUTH);
-
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLayout(new BorderLayout());
-        frame.add(gamePanel, BorderLayout.CENTER);
-        frame.add(scorePanel, BorderLayout.NORTH);
-        frame.add(instructionsPanel, BorderLayout.SOUTH);
+        frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        frame.add(gamePanel, BorderLayout.CENTER);  // Add the GamePanel to the JFrame
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
@@ -103,15 +64,14 @@ public class Game {
         frame.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
+                // Not needed for this case, but necessary to have
             }
 
             @Override
             public void keyPressed(KeyEvent e) {
                 // Handle key presses and update snake direction
-                if (!keyPressed) {
-                    keyPressed = true;
                     switch (e.getKeyCode()) {
-                        case KeyEvent.VK_UP:
+                        case KeyEvent.VK_UP -> {
                             if (!paused) {
                                 if (queue.isEmpty()) {
                                     if (snake.direction != 'D' && snake.direction != 'U') {
@@ -120,8 +80,9 @@ public class Game {
                                 } else if (queue.peekLast() != 'D' && queue.peekLast() != 'U') {
                                     queue.add('U');
                                 }
-                            } break;
-                        case KeyEvent.VK_DOWN:
+                            }
+                        }
+                        case KeyEvent.VK_DOWN -> {
                             if (!paused) {
                                 if (queue.isEmpty()) {
                                     if (snake.direction != 'U' && snake.direction != 'D') {
@@ -130,8 +91,9 @@ public class Game {
                                 } else if (queue.peekLast() != 'U' && queue.peekLast() != 'D') {
                                     queue.add('D');
                                 }
-                            } break;
-                        case KeyEvent.VK_LEFT:
+                            }
+                        }
+                        case KeyEvent.VK_LEFT -> {
                             if (!paused) {
                                 if (queue.isEmpty()) {
                                     if (snake.direction != 'R' && snake.direction != 'L') {
@@ -140,8 +102,9 @@ public class Game {
                                 } else if (queue.peekLast() != 'R' && queue.peekLast() != 'L') {
                                     queue.add('L');
                                 }
-                            } break;
-                        case KeyEvent.VK_RIGHT:
+                            }
+                        }
+                        case KeyEvent.VK_RIGHT -> {
                             if (!paused) {
                                 if (queue.isEmpty()) {
                                     if (snake.direction != 'L' && snake.direction != 'R') {
@@ -150,41 +113,55 @@ public class Game {
                                 } else if (queue.peekLast() != 'L' && queue.peekLast() != 'R') {
                                     queue.add('R');
                                 }
-                            } break;
-                        case KeyEvent.VK_ESCAPE:
+                            }
+                        }
+                        case KeyEvent.VK_SPACE -> {
+                            index = (index + 1) % 2;
+                            gamePanel.setTheme(index);
+                        }
+                        case KeyEvent.VK_ESCAPE -> {
                             paused = !paused;
+                            gamePanel.repaint();
                             if (paused) {
                                 scheduler.shutdown();
-                                scoreText.setText("GAME PAUSED");
+                                gamePanel.repaint();
                             } else {
                                 scheduler = Executors.newScheduledThreadPool(1);
                                 start();
-                                scoreText.setText("Score: " + score);
+                                gamePanel.revalidate();
+                                gamePanel.updateScore(score);
                             }
+                            gamePanel.recreatePanelsWithTheme();
+                        }
                     }
                 }
-            }
+
 
             @Override
             public void keyReleased(KeyEvent e) {
-                keyPressed = false;
+                // Not needed for this case, but necessary to have
             }
         });
+
         start();
     }
 
-    private void scoreGame(Snake snake) {
+    private void scoreGame() {
         score += 100;
+        gamePanel.updateScore(score);
     }
 
     private void restartGame() {
         // Reset snake and apple positions
+        scoreRegister();
+        score = 0;
         scheduler.shutdown();
         snake.reset();
         apple.randomizePos(snake);
-        score = 0;
-        speed = 200000;
-        delay = 500000;
+        gamePanel.updateScore(score);
+        gamePanel.updateHighScore(getHighScore());
+        speed = 250000;
+        delay = 250000;
         // Restart game timer
         scheduler = Executors.newScheduledThreadPool(1);
         start();
@@ -196,15 +173,14 @@ public class Game {
                 if (!queue.isEmpty()) snake.direction = queue.poll();
                 if (snake.move(apple.getX(), apple.getY())) {
                     apple.randomizePos(snake);
-                    scoreGame(snake);
+                    scoreGame();
                     increaseSpeed();
                 }
                 gamePanel.repaint();
                 scoreText.setText("Score: " + score);
             } else {
                 if (snake.checkCollision) {
-                    int choice = JOptionPane.showConfirmDialog(frame, """
-                            Do you want to restart?""", "Game Over", JOptionPane.YES_NO_OPTION);
+                    int choice = JOptionPane.showConfirmDialog(frame,"Do you want to restart?", "Game Over", JOptionPane.YES_NO_OPTION);
                     if (choice == JOptionPane.YES_OPTION) {
                         restartGame();
                     } else {
@@ -224,8 +200,21 @@ public class Game {
             }
         };
 
-        ScheduledFuture<?> timer = scheduler.scheduleAtFixedRate(startGame, delay, speed, MICROSECONDS);
+        scheduler.scheduleAtFixedRate(startGame, delay, speed, MICROSECONDS);
     }
+
+    public void scoreRegister() {
+        if (score > highScore) {
+            highScore = score;
+            gamePanel.updateHighScore(highScore);
+        }
+    }
+
+
+    public int getHighScore() {
+        return highScore;
+    }
+
 
     public void increaseSpeed() {
         this.speed = speed - 450;
@@ -242,9 +231,7 @@ public class Game {
         } catch (UnsupportedLookAndFeelException e) {
             e.printStackTrace();
         }
-        SwingUtilities.invokeLater(() -> {
-            Game game = new Game();
-        });
+        SwingUtilities.invokeLater(Game::new);
     }
 
 }
