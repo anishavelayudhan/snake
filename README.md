@@ -1,4 +1,4 @@
-# 🎮 Welcome to Snake!
+# 🐍 Welcome to Snake! 
 ![demo.png](https://i.imgur.com/6HjByx6.png)
 Step back into the classic era of gaming with Snake! This project, born out of a traineeship where I combined my love for visual design with coding, aims to bring back the joy of old-school gameplay in a modern context. During this traineeship, I started learning Java, aiming to grasp Object-Oriented Programming principles and work with Graphical User Interfaces (GUI). This project represents my first venture into Java programming, marking a significant milestone in my journey of coding.
 <br/><br/>
@@ -48,7 +48,7 @@ java -jar out/artifacts/snake_jar/snake.jar
 ```
 <br/>
 
-## Game Usage
+## How to Play
 
 - Use the arrow keys (up, down, left, right) to control the snake's movement.
 - Devour the apples to increase your score and snake length.
@@ -67,13 +67,16 @@ Do you want to enhance the Snake experience? Follow these steps to contribute:
 3. Implement your enhancements.
 4. Commit your changes (`git commit -am 'Add some feature'`).
 5. Push to the branch (`git push origin feature/your-feature`).
-6. Create a new Pull Request and wait until approved!
+6. Submit a pul request
 <br/><br/>
 
 ## License
 
-Ready to relive the thrill? Snake is licensed under the MIT License.
+Snake is licensed under the MIT License.
 
 ## Contact
 
 Share your Snake experiences or suggestions for further improvements by contacting [me](anisha.velayudhan@gmail.com). 
+
+Let the game begin!
+
