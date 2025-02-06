@@ -1,28 +1,36 @@
 package com.snake.view;
 
-import com.snake.model.Direction;
 import com.snake.model.GameState;
 import com.snake.util.GameConstants;
+import com.snake.view.theme.QquestTheme;
+import com.snake.view.theme.RetroTheme;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Arrays;
+import java.util.List;
 
 
 public class GamePanel extends JPanel {
     private final GameState gameState;
+    private Theme theme;
+    private final List<Theme> themeList = Arrays.asList(
+            new RetroTheme(),
+            new QquestTheme()
+    );
 
-    private transient Theme currentTheme;
     private final JLabel scoreLabel = new JLabel("Score: 0");
     private final JLabel highScoreLabel = new JLabel("High Score: ");
 
+
     public GamePanel(GameState gameState) {
         this.gameState = gameState;
-        this.currentTheme = Theme.getDefaultTheme();
+        this.theme = themeList.get(0);
         initializePanel();
     }
 
     public void cycleTheme() {
-        currentTheme = Theme.getNextTheme(currentTheme);
+        this.theme = themeList.get((themeList.indexOf(theme) + 1) % themeList.size());
         refreshUI();
     }
 
@@ -46,7 +54,7 @@ public class GamePanel extends JPanel {
     // Top Panel Components
     private JPanel createTopPanel() {
         JPanel topPanel = new JPanel(new BorderLayout());
-        topPanel.setBackground(currentTheme.getPanelColor1());
+        topPanel.setBackground(theme.getPanelColor1());
 
         topPanel.add(gameState.isPaused() ? createPausedLabel() : createScorePanel(), BorderLayout.CENTER);
         topPanel.add(createButtonPanel(), BorderLayout.SOUTH);
@@ -56,21 +64,21 @@ public class GamePanel extends JPanel {
     private JLabel createPausedLabel() {
         JLabel label = new JLabel("GAME PAUSED", SwingConstants.CENTER);
         label.setFont(GameConstants.Resources.FONT);
-        label.setForeground(currentTheme.getPanelColor2());
+        label.setForeground(theme.getPanelColor2());
         label.setBorder(BorderFactory.createEmptyBorder(9, 0, 6, 0));
         return label;
     }
 
     private JPanel createScorePanel() {
         JPanel panel = new JPanel(new BorderLayout());
-        panel.setBackground(currentTheme.getPanelColor1());
+        panel.setBackground(theme.getPanelColor1());
 
         scoreLabel.setFont(GameConstants.Resources.FONT);
-        scoreLabel.setForeground(currentTheme.getPanelColor2());
+        scoreLabel.setForeground(theme.getPanelColor2());
         scoreLabel.setBorder(BorderFactory.createEmptyBorder(9, 11, 6, 0));
 
         highScoreLabel.setFont(GameConstants.Resources.FONT);
-        highScoreLabel.setForeground(currentTheme.getPanelColor2());
+        highScoreLabel.setForeground(theme.getPanelColor2());
         highScoreLabel.setBorder(BorderFactory.createEmptyBorder(9, 0, 6, 11));
 
         panel.add(scoreLabel, BorderLayout.WEST);
@@ -80,7 +88,7 @@ public class GamePanel extends JPanel {
 
     private JPanel createButtonPanel() {
         JPanel buttonPanel = new JPanel(new BorderLayout());
-        buttonPanel.setBackground(currentTheme.getBackgroundColor());
+        buttonPanel.setBackground(theme.getBackgroundColor());
         buttonPanel.add(createHelpButton(), BorderLayout.EAST);
         return buttonPanel;
     }
@@ -88,25 +96,25 @@ public class GamePanel extends JPanel {
     // Bottom Panel Components
     private JPanel createBottomPanel() {
         JPanel panel = new JPanel(new BorderLayout());
-        panel.setBackground(currentTheme.getBackgroundColor());
+        panel.setBackground(theme.getBackgroundColor());
         panel.add(createCreditsPanel(), BorderLayout.SOUTH);
         return panel;
     }
 
     private JPanel createCreditsPanel() {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        panel.setBackground(currentTheme.getBackgroundColor());
+        panel.setBackground(theme.getBackgroundColor());
 
         JLabel label = new JLabel("By Anisha Velayudhan");
         label.setFont(GameConstants.Resources.FONT.deriveFont(Font.PLAIN, GameConstants.FONT_SIZE_CREDITS));
-        label.setForeground(currentTheme.getPanelColor1());
+        label.setForeground(theme.getPanelColor1());
         label.setBorder(BorderFactory.createEmptyBorder(70, 0, 0, 0));
 
         panel.add(label);
         return panel;
     }
 
-    // Game Grid Components
+    // Method for drawing game grid
     private JPanel createGridPanel() {
         return new JPanel() {
             @Override
@@ -119,130 +127,50 @@ public class GamePanel extends JPanel {
 
             private void configureRendering(Graphics2D g2d) {
                 g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2d.setColor(currentTheme.getBackgroundColor());
+                g2d.setColor(theme.getBackgroundColor());
                 g2d.fillRect(0, 0, getWidth(), getHeight());
             }
 
-            private void drawGameGrid(Graphics2D g2d) {
-                int cellSize = calculateCellSize();
-                Point gridStart = calculateGridStart(cellSize);
 
+            private void drawGameGrid(Graphics2D g2d) {
                 for (int y = 0; y < GameConstants.GRID_SIZE; y++) {
                     for (int x = 0; x < GameConstants.GRID_SIZE; x++) {
-                        Point pos = calculateCellPosition(gridStart, x, y, cellSize);
-                        drawCell(g2d, x, y, pos.x, pos.y, cellSize);
+                        Point pos = calculateCellPosition(calculateGridStart(), x, y);
+                        drawCell(g2d, x, y, pos.x, pos.y);
                     }
                 }
             }
 
-            private int calculateCellSize() {
-                int availableWidth = getWidth() - 180;
-                int availableHeight = getHeight() - 70;
-                return Math.min(availableWidth / GameConstants.GRID_SIZE,
-                        availableHeight / GameConstants.GRID_SIZE);
-            }
-
-            private Point calculateGridStart(int cellSize) {
-                int totalWidth = cellSize * GameConstants.GRID_SIZE;
+            private Point calculateGridStart() {
+                int totalWidth = GameConstants.GRID_CELL_SIZE * GameConstants.GRID_SIZE;
                 return new Point(
                         (getWidth() - totalWidth) / 2,
-                        70 + (getHeight() - 70 - cellSize * GameConstants.GRID_SIZE) / 2
+                        70 + (getHeight() - 70 - GameConstants.GRID_CELL_SIZE * GameConstants.GRID_SIZE) / 2
                 );
             }
 
-            private Point calculateCellPosition(Point start, int x, int y, int size) {
-                return new Point(start.x + x * size, start.y + y * size);
+            private Point calculateCellPosition(Point start, int x, int y) {
+                return new Point(start.x + x * GameConstants.GRID_CELL_SIZE, start.y + y * GameConstants.GRID_CELL_SIZE);
             }
 
-            private void drawCell(Graphics2D g2d, int x, int y, int xPos, int yPos, int size) {
+            private void drawCell(Graphics2D g2d, int x, int y, int xPos, int yPos) {
                 if (gameState.getSnake().occupiesPosition(x, y)) {
-                    drawSnakeSegment(g2d, x, y, xPos, yPos, size);
+                    boolean isHead = gameState.getSnake().isHead(x, y);
+                    boolean isTail = gameState.getSnake().isTail(x, y);
+                    theme.drawSnakeSegment(g2d, xPos, yPos, isHead, isTail,
+                            gameState.getSnake().getTailDirection(), gameState.getSnake().getDirection());
                 } else if (x == gameState.getApple().getX() && y == gameState.getApple().getY()) {
-                    drawApple(g2d, xPos, yPos, size);
+                    theme.drawApple(g2d, xPos, yPos);
                 } else {
-                    drawGridCell(g2d, x, y, xPos, yPos, size);
+                    drawGridCell(g2d, x, y, xPos, yPos);
                 }
             }
 
-            private void drawSnakeSegment(Graphics2D g2d, int x, int y, int xPos, int yPos, int size) {
-                Color gridColor = (x + y) % 2 == 0 ?
-                        currentTheme.getGridColor1() : currentTheme.getGridColor2();
-                g2d.setColor(gridColor);
-                g2d.fillRect(xPos, yPos, size, size);
-
-                g2d.setColor(currentTheme.getSnakeColor());
-                if (currentTheme.getName().equals("Retro")) {
-                    drawRetroSnakeSegment(g2d, xPos, yPos, size);
-                } else {
-                    drawStandardSnakeSegment(g2d, x, y, xPos, yPos, size);
-                }
-            }
-
-            private void drawStandardSnakeSegment(Graphics2D g2d, int x, int y,
-                                                  int xPos, int yPos, int size) {
-                if (gameState.getSnake().isHead(x, y)) drawHead(g2d, xPos, yPos, size);
-                else if (gameState.getSnake().isTail(x, y)) drawTail(g2d, xPos, yPos, size);
-                else g2d.fillRect(xPos, yPos, size, size);
-            }
-
-            private void drawRetroSnakeSegment(Graphics2D g2d, int xPos, int yPos, int size) {
-                g2d.fillRect(xPos + 1, yPos + 1, size - 2, size - 2);
-            }
-
-            private void drawHead(Graphics2D g2d, int x, int y, int size) {
-                switch (gameState.getSnake().getDirection()) {
-                    case UP -> drawArcWithRect(g2d, x, y, size, 0, 0, size/2, size, size/2);
-                    case DOWN -> drawArcWithRect(g2d, x, y, size, 180, 0, 0, size, size/2);
-                    case LEFT -> drawArcWithRect(g2d, x, y, size, 90, size/2, 0, size/2, size);
-                    case RIGHT -> drawArcWithRect(g2d, x, y, size, -90, 0, 0, size/2, size);
-                }
-            }
-
-            private void drawTail(Graphics2D g2d, int x, int y, int size) {
-                Direction dir = gameState.getSnake().getTailDirection();
-                switch (dir) {
-                    case UP -> drawArcWithRect(g2d, x, y, size, 180, 0, 0, size, size/2);
-                    case DOWN -> drawArcWithRect(g2d, x, y, size, 0, 0, size/2, size, size/2);
-                    case LEFT -> drawArcWithRect(g2d, x, y, size, -90, 0, 0, size/2, size);
-                    case RIGHT -> drawArcWithRect(g2d, x, y, size, 90, size/2, 0, size/2, size);
-                }
-            }
-
-            private void drawArcWithRect(Graphics2D g2d, int x, int y, int size,
-                                         int arcStart,
-                                         int rectX, int rectY, int rectW, int rectH) {
-                g2d.fillArc(x, y, size, size, arcStart, 180);
-                g2d.fillRect(x + rectX, y + rectY, rectW, rectH);
-            }
-
-            private void drawApple(Graphics2D g2d, int xPos, int yPos, int size) {
-                g2d.setColor(currentTheme.getGridColor1());
-                g2d.fillRect(xPos, yPos, size, size);
-                g2d.setColor(currentTheme.getAppleColor());
-
-                if (currentTheme.getName().equals("Retro")) {
-                    drawRetroApple(g2d, xPos, yPos, size);
-                } else {
-                    g2d.fillOval(xPos + 2, yPos + 2, size - 4, size - 4);
-                }
-            }
-
-            private void drawRetroApple(Graphics2D g2d, int xPos, int yPos, int size) {
-                int pad = size / 6;
-                int centerX = xPos + size/2;
-                int centerY = yPos + size/2;
-
-                // Horizontal
-                g2d.fillRect(centerX - size/2 + pad, centerY - size/6, size - 2*pad, size/3);
-                // Vertical
-                g2d.fillRect(centerX - size/6, centerY - size/2 + pad, size/3, size - 2*pad);
-            }
-
-            private void drawGridCell(Graphics2D g2d, int x, int y, int xPos, int yPos, int size) {
+            private void drawGridCell(Graphics2D g2d, int x, int y, int xPos, int yPos) {
                 Color color = (x + y) % 2 == 0 ?
-                        currentTheme.getGridColor1() : currentTheme.getGridColor2();
+                        theme.getGridColor1() : theme.getGridColor2();
                 g2d.setColor(color);
-                g2d.fillRect(xPos, yPos, size, size);
+                g2d.fillRect(xPos, yPos, GameConstants.GRID_CELL_SIZE, GameConstants.GRID_CELL_SIZE);
             }
         };
     }

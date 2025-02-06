@@ -5,12 +5,13 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 
 public final class GameConstants {
-    private GameConstants () {}
-
     private static final ResourceLoader resourceLoader = new ResourceLoader();
+
+    private GameConstants () {}
 
     // Game Grid Configuration
     public static final int GRID_SIZE = 17;
+    public static final int GRID_CELL_SIZE = 20;
     public static final int WINDOW_WIDTH = 550;
     public static final int WINDOW_HEIGHT = 600;
     public static final int START_POSITION_X = 7;

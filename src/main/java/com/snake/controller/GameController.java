@@ -38,7 +38,7 @@ public class GameController {
             Direction nextDirection = directionQueue.peek();
             Direction currentDirection = gameState.getSnake().getDirection();
 
-            if (!nextDirection.isOpposite(currentDirection)) {
+            if (nextDirection.isOpposite(currentDirection)) {
                 gameState.getSnake().setDirection(nextDirection);
                 directionQueue.poll();
             } else {
@@ -85,7 +85,7 @@ public class GameController {
             if (gameState.isPaused()) return;
 
             Direction currentSnakeDirection = gameState.getSnake().getDirection();
-            if (!newDirection.isOpposite(currentSnakeDirection)) {
+            if (newDirection.isOpposite(currentSnakeDirection)) {
                 directionQueue.add(newDirection);
             }
         }

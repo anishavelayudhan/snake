@@ -70,7 +70,7 @@ public class Snake {
     }
 
     public void setDirection(Direction newDirection) {
-        if (!newDirection.isOpposite(direction)) {
+        if (newDirection.isOpposite(direction)) {
             direction = newDirection;
         }
     }
@@ -78,10 +78,14 @@ public class Snake {
     // Getters
     public Direction getDirection() { return direction; }
     public Segment getHead() { return body.get(body.size() - 1); }
-    public int[] getHeadPosition() { return new int[]{getHead().x(), getHead().y()}; }
     public Direction getTailDirection() {
         return body.size() > 1 ? body.get(1).direction() : direction;
     }
+    public int[] getHeadPosition() {
+        Segment head = getHead();
+        return new int[] {head.x(), head.y()};
+    }
+
 
     public void reset() {
         body.clear();
