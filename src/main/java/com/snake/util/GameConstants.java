@@ -14,6 +14,9 @@ public final class GameConstants {
     public static final int GRID_CELL_SIZE = 20;
     public static final int WINDOW_WIDTH = 550;
     public static final int WINDOW_HEIGHT = 600;
+
+    // Snake configuration
+    public static final int SNAKE_INITIAL_SIZE = 3;
     public static final int START_POSITION_X = 7;
     public static final int START_POSITION_Y = 5;
 

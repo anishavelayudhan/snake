@@ -18,7 +18,6 @@ public class RetroTheme implements Theme {
 
     @Override
     public void drawSnakeSegment(Graphics2D g2d, int xPos, int yPos, boolean isHead, boolean isTail, Direction dirTail, Direction dirHead) {
-        g2d.setColor(getGridColor1());
         g2d.fillRect(xPos, yPos, CELL_SIZE, CELL_SIZE);
         g2d.setColor(getSnakeColor());
 
@@ -43,7 +42,6 @@ public class RetroTheme implements Theme {
 
     @Override
     public void drawApple(Graphics2D g2d, int xPos, int yPos) {
-        g2d.setColor(getGridColor1());
         g2d.fillRect(xPos, yPos, CELL_SIZE, CELL_SIZE);
         g2d.setColor(getAppleColor());
         int pad = CELL_SIZE / 6;

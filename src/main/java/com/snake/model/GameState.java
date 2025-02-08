@@ -47,7 +47,6 @@ public class GameState implements Serializable {
         }
     }
 
-
     public void increaseSpeed() {
         this.currentSpeed = Math.max(
                 currentSpeed - GameConstants.SPEED_INCREMENT,

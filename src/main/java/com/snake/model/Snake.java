@@ -2,25 +2,31 @@ package com.snake.model;
 
 import com.snake.util.GameConstants;
 
-import java.util.ArrayList;
+import java.awt.*;
+import java.util.Deque;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Set;
 
 public class Snake {
-    private final ArrayList<Segment> body;
+    private final Deque<Segment> body;
+    private final Set<Point> occupiedPositions;
     private Direction direction;
     private boolean collided;
-    private boolean maxLengthReached;
     private boolean growNextMove;
 
     public Snake() {
         this.direction = Direction.RIGHT;
-        this.body = new ArrayList<>();
+        this.body = new LinkedList<>();
+        this.occupiedPositions = new HashSet<>();
         initializeBody();
     }
 
     private void initializeBody() {
-        for (int i = 0; i < 3; i++) {
-            this.body.add(new Segment(GameConstants.START_POSITION_X + i,
+        for (int i = 0; i < GameConstants.SNAKE_INITIAL_SIZE; i++) {
+            this.body.addFirst(new Segment(GameConstants.START_POSITION_X + i,
                     GameConstants.START_POSITION_Y, direction));
+            occupiedPositions.add(new Point(GameConstants.START_POSITION_X + i, GameConstants.START_POSITION_Y));
         }
     }
 
@@ -29,9 +35,7 @@ public class Snake {
     }
 
     public boolean occupiesPosition(int x, int y) {
-        return body.stream().anyMatch(segment ->
-                segment.x() == x && segment.y() == y
-        );
+        return occupiedPositions.contains(new Point(x, y));
     }
 
     public void move() {
@@ -39,30 +43,24 @@ public class Snake {
         int newX = (head.x() + direction.getDeltaX() + GameConstants.GRID_SIZE) % GameConstants.GRID_SIZE;
         int newY = (head.y() + direction.getDeltaY() + GameConstants.GRID_SIZE) % GameConstants.GRID_SIZE;
 
-        if (checkCollision(newX, newY)) {
+        if (occupiedPositions.contains(new Point(newX, newY))) {
             collided = true;
             return;
         }
 
-        body.add(new Segment(newX, newY, direction));
-        if (!maxLengthReached && !growNextMove) {
-            body.remove(0);
+        body.addFirst(new Segment(newX, newY, direction));
+        occupiedPositions.add(new Point(newX, newY));
+
+        if (!growNextMove) {
+            Segment tail = body.removeLast();
+            occupiedPositions.remove(new Point(tail.x(), tail.y()));
         }
 
-        if (growNextMove) {
-            growNextMove = false;
-        }
+        growNextMove = false;
     }
 
     public void grow() {
         this.growNextMove = true;
-    }
-
-    private boolean checkCollision(int x, int y) {
-        boolean collision = body.stream()
-                .anyMatch(segment -> segment.x() == x && segment.y() == y);
-        maxLengthReached = isMaxLength();
-        return collision;
     }
 
     public boolean isCollided() {
@@ -70,16 +68,17 @@ public class Snake {
     }
 
     public void setDirection(Direction newDirection) {
-        if (newDirection.isOpposite(direction)) {
+        if (direction.isValidDirection(newDirection)) {
             direction = newDirection;
         }
     }
 
     // Getters
     public Direction getDirection() { return direction; }
-    public Segment getHead() { return body.get(body.size() - 1); }
+    private Segment getHead() { return body.getFirst(); }
+    private Segment getTail() { return body.getLast(); }
     public Direction getTailDirection() {
-        return body.size() > 1 ? body.get(1).direction() : direction;
+        return body.size() > 1 ? body.getLast().direction() : direction;
     }
     public int[] getHeadPosition() {
         Segment head = getHead();
@@ -89,10 +88,10 @@ public class Snake {
 
     public void reset() {
         body.clear();
+        occupiedPositions.clear();
         initializeBody();
         direction = Direction.RIGHT;
         collided = false;
-        maxLengthReached = false;
     }
 
     public boolean isHead(int x, int y) {
@@ -101,7 +100,7 @@ public class Snake {
     }
 
     public boolean isTail(int x, int y) {
-        Segment tail = body.get(0);
+        Segment tail = getTail();
         return tail.x() == x && tail.y() == y;
     }
 

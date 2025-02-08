@@ -16,6 +16,7 @@ public class QquestTheme implements Theme {
     private static final Color PANEL_COLOR_2 = new Color(55, 192, 241);
     private static final int CELL_SIZE = GameConstants.GRID_CELL_SIZE;
 
+
     @Override
     public void drawSnakeSegment(Graphics2D g2d, int xPos, int yPos, boolean isHead, boolean isTail, Direction dirTail, Direction dirHead) {
         g2d.setColor(getSnakeColor());
@@ -47,7 +48,6 @@ public class QquestTheme implements Theme {
         }
     }
 
-
     private void drawSnakeTail(Graphics2D g2d, int x, int y, Direction dir) {
         Rectangle rect;
         switch (dir) {
@@ -70,13 +70,11 @@ public class QquestTheme implements Theme {
         }
     }
 
-
     private void drawArcWithRect(Graphics2D g2d, int x, int y, int arcStart,
                                  Rectangle rect) {
         g2d.fillArc(x, y, CELL_SIZE, CELL_SIZE, arcStart, 180);
         g2d.fillRect(rect.x + x, rect.y + y, rect.width, rect.height);
     }
-
 
 
     @Override

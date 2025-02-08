@@ -13,14 +13,16 @@ import java.util.List;
 
 public class GamePanel extends JPanel {
     private final GameState gameState;
-    private Theme theme;
-    private final List<Theme> themeList = Arrays.asList(
+    private transient Theme theme;
+    private final transient List<Theme> themeList = Arrays.asList(
             new RetroTheme(),
             new QquestTheme()
     );
 
     private final JLabel scoreLabel = new JLabel("Score: 0");
     private final JLabel highScoreLabel = new JLabel("High Score: ");
+    private final JLabel creditsLabel = new JLabel("By Anisha Velayudhan");
+    private final JLabel pausedLabel = new JLabel("GAME PAUSED", SwingConstants.CENTER);
 
 
     public GamePanel(GameState gameState) {
@@ -62,11 +64,10 @@ public class GamePanel extends JPanel {
     }
 
     private JLabel createPausedLabel() {
-        JLabel label = new JLabel("GAME PAUSED", SwingConstants.CENTER);
-        label.setFont(GameConstants.Resources.FONT);
-        label.setForeground(theme.getPanelColor2());
-        label.setBorder(BorderFactory.createEmptyBorder(9, 0, 6, 0));
-        return label;
+        pausedLabel.setFont(GameConstants.Resources.FONT);
+        pausedLabel.setForeground(theme.getPanelColor2());
+        pausedLabel.setBorder(BorderFactory.createEmptyBorder(9, 0, 6, 0));
+        return pausedLabel;
     }
 
     private JPanel createScorePanel() {
@@ -105,16 +106,14 @@ public class GamePanel extends JPanel {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         panel.setBackground(theme.getBackgroundColor());
 
-        JLabel label = new JLabel("By Anisha Velayudhan");
-        label.setFont(GameConstants.Resources.FONT.deriveFont(Font.PLAIN, GameConstants.FONT_SIZE_CREDITS));
-        label.setForeground(theme.getPanelColor1());
-        label.setBorder(BorderFactory.createEmptyBorder(70, 0, 0, 0));
+        creditsLabel.setFont(GameConstants.Resources.FONT.deriveFont(Font.PLAIN, GameConstants.FONT_SIZE_CREDITS));
+        creditsLabel.setForeground(theme.getPanelColor1());
+        creditsLabel.setBorder(BorderFactory.createEmptyBorder(70, 0, 0, 0));
 
-        panel.add(label);
+        panel.add(creditsLabel);
         return panel;
     }
 
-    // Method for drawing game grid
     private JPanel createGridPanel() {
         return new JPanel() {
             @Override
@@ -154,6 +153,7 @@ public class GamePanel extends JPanel {
             }
 
             private void drawCell(Graphics2D g2d, int x, int y, int xPos, int yPos) {
+                drawGridCell(g2d, x, y, xPos, yPos);
                 if (gameState.getSnake().occupiesPosition(x, y)) {
                     boolean isHead = gameState.getSnake().isHead(x, y);
                     boolean isTail = gameState.getSnake().isTail(x, y);
@@ -161,14 +161,11 @@ public class GamePanel extends JPanel {
                             gameState.getSnake().getTailDirection(), gameState.getSnake().getDirection());
                 } else if (x == gameState.getApple().getX() && y == gameState.getApple().getY()) {
                     theme.drawApple(g2d, xPos, yPos);
-                } else {
-                    drawGridCell(g2d, x, y, xPos, yPos);
                 }
             }
 
             private void drawGridCell(Graphics2D g2d, int x, int y, int xPos, int yPos) {
-                Color color = (x + y) % 2 == 0 ?
-                        theme.getGridColor1() : theme.getGridColor2();
+                Color color = (x + y) % 2 == 0 ? theme.getGridColor1() : theme.getGridColor2();
                 g2d.setColor(color);
                 g2d.fillRect(xPos, yPos, GameConstants.GRID_CELL_SIZE, GameConstants.GRID_CELL_SIZE);
             }

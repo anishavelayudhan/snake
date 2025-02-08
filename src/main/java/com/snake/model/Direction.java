@@ -14,11 +14,8 @@ public enum Direction {
         this.deltaY = deltaY;
     }
 
-    public boolean isOpposite(Direction other) {
-        return (this != UP || other != DOWN) &&
-                (this != DOWN || other != UP) &&
-                (this != LEFT || other != RIGHT) &&
-                (this != RIGHT || other != LEFT);
+    public boolean isValidDirection(Direction other) {
+        return this.deltaX != -other.deltaX || this.deltaY != -other.deltaY;
     }
 
     public int getDeltaX() { return deltaX; }

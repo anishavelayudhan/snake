@@ -19,7 +19,6 @@ public class GameController {
     private final GameState gameState;
     private final InputHandler inputHandler;
 
-    // Added GameState to manage game status
     public GameController(GamePanel gamePanel, GameState gameState) {
         this.gamePanel = gamePanel;
         this.gameState = gameState;
@@ -32,18 +31,16 @@ public class GameController {
         component.requestFocusInWindow();
     }
 
-    // In GameController
     public void processInput() {
         while (!directionQueue.isEmpty()) {
             Direction nextDirection = directionQueue.peek();
             Direction currentDirection = gameState.getSnake().getDirection();
 
-            if (nextDirection.isOpposite(currentDirection)) {
+            if (nextDirection.isValidDirection(currentDirection) && nextDirection != currentDirection) {
                 gameState.getSnake().setDirection(nextDirection);
-                directionQueue.poll();
-            } else {
-                break; // Stop processing invalid directions
             }
+
+            directionQueue.poll();
         }
     }
 
@@ -66,11 +63,11 @@ public class GameController {
         private void handleKeyPress(int keyCode) {
             switch (keyCode) {
                 case GameConstants.Controls.UP -> queueDirection(Direction.UP);
-                case GameConstants.Controls.DOWN  -> queueDirection(Direction.DOWN);
-                case GameConstants.Controls.LEFT  -> queueDirection(Direction.LEFT);
-                case GameConstants.Controls.RIGHT  -> queueDirection(Direction.RIGHT);
-                case GameConstants.Controls.SPACE  -> gamePanel.cycleTheme();
-                case GameConstants.Controls.ESC  -> togglePause();
+                case GameConstants.Controls.DOWN -> queueDirection(Direction.DOWN);
+                case GameConstants.Controls.LEFT -> queueDirection(Direction.LEFT);
+                case GameConstants.Controls.RIGHT -> queueDirection(Direction.RIGHT);
+                case GameConstants.Controls.SPACE -> gamePanel.cycleTheme();
+                case GameConstants.Controls.ESC -> togglePause();
                 default -> { /* Ignore other keys */ }
             }
         }
@@ -85,7 +82,7 @@ public class GameController {
             if (gameState.isPaused()) return;
 
             Direction currentSnakeDirection = gameState.getSnake().getDirection();
-            if (newDirection.isOpposite(currentSnakeDirection)) {
+            if (newDirection.isValidDirection(currentSnakeDirection)) {
                 directionQueue.add(newDirection);
             }
         }
