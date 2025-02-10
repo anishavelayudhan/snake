@@ -15,7 +15,6 @@ public class SnakeGame {
     private final GameState gameState;
     private final GamePanel gamePanel;
     private final GameController gameController;
-    private Timer gameTimer;
 
     public SnakeGame() {
         this.gameState = new GameState();
@@ -41,26 +40,16 @@ public class SnakeGame {
     }
 
     private void startTimer() {
-        gameTimer = new Timer(gameState.getCurrentSpeed(), e -> gameLoopStep());
-        gameTimer.start();
+        new Timer(gameState.getCurrentSpeed(), e -> gameLoop()).start();
     }
 
-    private void gameLoopStep() {
+    private void gameLoop() {
         if (gameState.isPaused() || gameState.isGameOver()) return;
 
         try {
             gameController.processInput();
 
-            if (gameState.isEatingApple()) {
-                gameState.handleAppleEating();
-                gamePanel.updateScore();
-                adjustGameSpeed();
-            }
-
-            gameState.updateGameState();
-
-            if (gameState.isGameActive()) {
-                gameTimer.stop();
+            if (gameState.isGameOver()) {
                 showEndGameDialog();
             }
 
@@ -72,11 +61,6 @@ public class SnakeGame {
         }
 
     }
-
-    private void adjustGameSpeed() {
-        gameTimer.setDelay(gameState.getCurrentSpeed());
-    }
-
 
     private void showEndGameDialog() {
         SwingUtilities.invokeLater(() -> {
@@ -97,19 +81,11 @@ public class SnakeGame {
 
     private void handleRestartChoice(int choice) {
         if (choice == JOptionPane.YES_OPTION) {
-            resetGame();
+            gameController.resetGame();
         } else {
             System.exit(0);
         }
     }
-
-    private void resetGame() {
-        gameState.reset();
-        gameState.getSnake().reset();
-        gameState.getApple().randomizePosition(gameState.getSnake());
-        startTimer();
-    }
-
 
     public static void main(String[] args) {
         try {

@@ -38,4 +38,18 @@ public class ResourceLoader {
                 (getClass().getResource("/images/snake-icon.png"))).getImage();
     }
 
+    public static int loadHighScore(String highScoreFile) {
+        File file = new File(highScoreFile);
+        if (!file.exists()) {
+            return 0;
+        }
+
+        try (DataInputStream dis = new DataInputStream(new FileInputStream(file))) {
+            return dis.readInt();
+        } catch (IOException e) {
+            Logger.getLogger(ResourceLoader.class.getName()).severe("Error reading high score file: " + highScoreFile);
+            return 0;
+        }
+    }
+
 }

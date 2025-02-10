@@ -14,16 +14,11 @@ public class Apple {
     }
 
     public void randomizePosition(Snake snake) {
-        int maxAttempts = GameConstants.GRID_SIZE * GameConstants.GRID_SIZE;
-        int attempts = 0;
-
         do {
             this.x = RANDOM.nextInt(GameConstants.GRID_SIZE);
             this.y = RANDOM.nextInt(GameConstants.GRID_SIZE);
-            attempts++;
         } while (snake != null &&
-                snake.occupiesPosition(x, y) &&
-                attempts < maxAttempts);
+                snake.occupiesPosition(x, y));
     }
 
     public int[] getPosition() { return new int[] { this.x, this.y }; }

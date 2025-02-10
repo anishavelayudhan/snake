@@ -6,18 +6,18 @@ public enum Direction {
     LEFT(-1, 0),
     RIGHT(1, 0);
 
-    private final int deltaX;
-    private final int deltaY;
+    private final int x;
+    private final int y;
 
-    Direction(int deltaX, int deltaY) {
-        this.deltaX = deltaX;
-        this.deltaY = deltaY;
+    Direction(int x, int y) {
+        this.x = x;
+        this.y = y;
     }
 
     public boolean isValidDirection(Direction other) {
-        return this.deltaX != -other.deltaX || this.deltaY != -other.deltaY;
+        return other != this && this.x != -other.x && this.y != -other.y;
     }
 
-    public int getDeltaX() { return deltaX; }
-    public int getDeltaY() { return deltaY; }
+    public int getX() { return x; }
+    public int getY() { return y; }
 }

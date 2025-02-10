@@ -40,8 +40,9 @@ public final class GameConstants {
         public static final int DOWN = KeyEvent.VK_DOWN;
         public static final int LEFT = KeyEvent.VK_LEFT;
         public static final int RIGHT = KeyEvent.VK_RIGHT;
+        public static final int RESET = KeyEvent.VK_R;
+        public static final int TAB = KeyEvent.VK_TAB;
         public static final int SPACE = KeyEvent.VK_SPACE;
-        public static final int ESC = KeyEvent.VK_ESCAPE;
     }
 
     // Resource Management

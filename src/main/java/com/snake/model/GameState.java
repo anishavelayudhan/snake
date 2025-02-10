@@ -1,14 +1,12 @@
 package com.snake.model;
 
 import com.snake.util.GameConstants;
+import com.snake.util.HighScoreManager;
 
-import java.io.Serializable;
-import java.util.Arrays;
-
-public class GameState implements Serializable {
+public class GameState {
     // Game objects
-    private final transient Snake snake;
-    private final transient Apple apple;
+    private Snake snake;
+    private Apple apple;
 
     // Core game status
     private boolean paused;
@@ -25,8 +23,8 @@ public class GameState implements Serializable {
     public GameState() {
         this.snake = new Snake();
         this.apple = new Apple();
+        this.highScore = HighScoreManager.loadHighScore();
         this.currentSpeed = GameConstants.INITIAL_GAME_SPEED;
-        reset();
     }
 
     // State management methods
@@ -36,14 +34,17 @@ public class GameState implements Serializable {
         this.gameWon = false;
         this.score = 0;
         this.currentSpeed = GameConstants.INITIAL_GAME_SPEED;
-    }
 
+        this.snake = new Snake();
+        this.apple = new Apple();
+    }
 
     // Getters/Setters with validation
     public void setScore(int score) {
         this.score = Math.max(score, 0);
         if (this.score > highScore) {
             highScore = this.score;
+            HighScoreManager.saveHighScore(highScore);
         }
     }
 
@@ -54,40 +55,50 @@ public class GameState implements Serializable {
         );
     }
 
-    public void updateGameState() {
-        snake.move();
-
+    public boolean isGameOver() {
         if (snake.isCollided()) {
             setGameOver(true);
-            return;
+            return true;
         }
 
         if (snake.isMaxLength()) {
             setGameWon(true);
+            return true;
         }
 
+        return false;
     }
 
-    public void handleAppleEating() {
-        setScore(score + GameConstants.SCORE_PER_APPLE);
-        apple.randomizePosition(snake);
-        snake.grow();
-        increaseSpeed();
-    }
 
     // Standard getters
-    public Snake getSnake() { return snake; }
-    public Apple getApple() { return apple; }
-    public boolean isPaused() { return paused; }
-    public boolean isGameOver() { return gameOver; }
-    public boolean isGameWon() { return gameWon; }
-    public boolean isGameActive() { return gameOver || gameWon; }
-    public int getScore() { return score; }
-    public int getHighScore() { return highScore; }
-    public int getCurrentSpeed() { return currentSpeed; }
-    public boolean isEatingApple() {
-        return Arrays.equals(snake.getHeadPosition(), apple.getPosition());
+    public Snake getSnake() {
+        return snake;
     }
+
+    public Apple getApple() {
+        return apple;
+    }
+
+    public boolean isPaused() {
+        return paused;
+    }
+
+    public boolean isGameWon() {
+        return gameWon;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public int getHighScore() {
+        return highScore;
+    }
+
+    public int getCurrentSpeed() {
+        return currentSpeed;
+    }
+
 
     // Controlled setters
     public void setPaused(boolean paused) {

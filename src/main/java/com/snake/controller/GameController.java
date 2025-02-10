@@ -8,10 +8,8 @@ import com.snake.view.GamePanel;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.Deque;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Set;
+import java.util.*;
+
 
 public class GameController {
     private final Deque<Direction> directionQueue = new LinkedList<>();
@@ -29,19 +27,42 @@ public class GameController {
         component.addKeyListener(inputHandler);
         component.setFocusable(true);
         component.requestFocusInWindow();
+
+        // Disable focus traversal keys
+        Set<AWTKeyStroke> forwardKeys = new HashSet<>(component.getFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS));
+        forwardKeys.remove(AWTKeyStroke.getAWTKeyStroke(KeyEvent.VK_TAB, 0));
+        component.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, forwardKeys);
     }
 
     public void processInput() {
-        while (!directionQueue.isEmpty()) {
-            Direction nextDirection = directionQueue.peek();
-            Direction currentDirection = gameState.getSnake().getDirection();
+       Direction currentDirection = gameState.getSnake().getDirection();
+       Direction newDirection;
 
-            if (nextDirection.isValidDirection(currentDirection) && nextDirection != currentDirection) {
-                gameState.getSnake().setDirection(nextDirection);
+        while ((newDirection = directionQueue.poll()) != null) {
+            if (newDirection.isValidDirection(currentDirection)) {
+                gameState.getSnake().setDirection(newDirection);
+                break;
             }
-
-            directionQueue.poll();
         }
+
+        gameState.getSnake().move();
+        processAppleEating();
+    }
+
+    public void processAppleEating() {
+        if (Arrays.equals(gameState.getSnake().getHeadPosition(), gameState.getApple().getPosition())) {
+            gameState.setScore(gameState.getScore() + GameConstants.SCORE_PER_APPLE);
+            gameState.getApple().randomizePosition(gameState.getSnake());
+            gameState.getSnake().grow();
+            gameState.increaseSpeed();
+
+            gamePanel.updateScore();
+        }
+    }
+
+    public void resetGame() {
+        gameState.reset();
+        gamePanel.updateScore();
     }
 
     private class InputHandler extends KeyAdapter {
@@ -66,12 +87,12 @@ public class GameController {
                 case GameConstants.Controls.DOWN -> queueDirection(Direction.DOWN);
                 case GameConstants.Controls.LEFT -> queueDirection(Direction.LEFT);
                 case GameConstants.Controls.RIGHT -> queueDirection(Direction.RIGHT);
-                case GameConstants.Controls.SPACE -> gamePanel.cycleTheme();
-                case GameConstants.Controls.ESC -> togglePause();
+                case GameConstants.Controls.RESET -> resetGame();
+                case GameConstants.Controls.TAB -> gamePanel.cycleTheme();
+                case GameConstants.Controls.SPACE -> togglePause();
                 default -> { /* Ignore other keys */ }
             }
         }
-
 
         private void togglePause() {
             gameState.setPaused(!gameState.isPaused());
@@ -81,10 +102,7 @@ public class GameController {
         private void queueDirection(Direction newDirection) {
             if (gameState.isPaused()) return;
 
-            Direction currentSnakeDirection = gameState.getSnake().getDirection();
-            if (newDirection.isValidDirection(currentSnakeDirection)) {
-                directionQueue.add(newDirection);
-            }
+            directionQueue.add(newDirection);
         }
     }
 }

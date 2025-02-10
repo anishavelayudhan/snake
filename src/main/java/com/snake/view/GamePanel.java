@@ -4,6 +4,7 @@ import com.snake.model.GameState;
 import com.snake.util.GameConstants;
 import com.snake.view.theme.QquestTheme;
 import com.snake.view.theme.RetroTheme;
+import com.snake.view.theme.TomTomTheme;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,15 +13,16 @@ import java.util.List;
 
 
 public class GamePanel extends JPanel {
-    private final GameState gameState;
+    private final transient GameState gameState;
     private transient Theme theme;
     private final transient List<Theme> themeList = Arrays.asList(
             new RetroTheme(),
+            new TomTomTheme(),
             new QquestTheme()
     );
 
     private final JLabel scoreLabel = new JLabel("Score: 0");
-    private final JLabel highScoreLabel = new JLabel("High Score: ");
+    private final JLabel highScoreLabel = new JLabel();
     private final JLabel creditsLabel = new JLabel("By Anisha Velayudhan");
     private final JLabel pausedLabel = new JLabel("GAME PAUSED", SwingConstants.CENTER);
 
@@ -42,6 +44,8 @@ public class GamePanel extends JPanel {
         add(createGridPanel(), BorderLayout.CENTER);
         add(createTopPanel(), BorderLayout.NORTH);
         add(createBottomPanel(), BorderLayout.SOUTH);
+
+        highScoreLabel.setText("High Score: " + gameState.getHighScore());
     }
 
     public void refreshUI() {
@@ -51,6 +55,17 @@ public class GamePanel extends JPanel {
         add(createBottomPanel(), BorderLayout.SOUTH);
         revalidate();
         repaint();
+    }
+
+    public void updateScore() {
+        scoreLabel.setText("Score: " + gameState.getScore());
+        if (gameState.getScore() == gameState.getHighScore()) {
+            updateHighScore();
+        }
+    }
+
+    public void updateHighScore() {
+        highScoreLabel.setText("High Score: " + gameState.getHighScore());
     }
 
     // Top Panel Components
@@ -94,6 +109,20 @@ public class GamePanel extends JPanel {
         return buttonPanel;
     }
 
+    private JButton createHelpButton() {
+        JButton button = new JButton(GameConstants.Resources.HELP_ICON);
+        button.setToolTipText("Controls:\n→←↑↓ Movement\nSPACE Pause\nTAB Themes\n R Restart");
+        styleButton(button);
+        return button;
+    }
+
+
+    private void styleButton(JButton button) {
+        button.setBorderPainted(false);
+        button.setContentAreaFilled(false);
+        button.setFocusPainted(false);
+    }
+
     // Bottom Panel Components
     private JPanel createBottomPanel() {
         JPanel panel = new JPanel(new BorderLayout());
@@ -114,6 +143,8 @@ public class GamePanel extends JPanel {
         return panel;
     }
 
+
+    // Grid Panel
     private JPanel createGridPanel() {
         return new JPanel() {
             @Override
@@ -144,7 +175,7 @@ public class GamePanel extends JPanel {
                 int totalWidth = GameConstants.GRID_CELL_SIZE * GameConstants.GRID_SIZE;
                 return new Point(
                         (getWidth() - totalWidth) / 2,
-                        70 + (getHeight() - 70 - GameConstants.GRID_CELL_SIZE * GameConstants.GRID_SIZE) / 2
+                        60 + (getHeight() - 70 - GameConstants.GRID_CELL_SIZE * GameConstants.GRID_SIZE) / 2
                 );
             }
 
@@ -170,30 +201,5 @@ public class GamePanel extends JPanel {
                 g2d.fillRect(xPos, yPos, GameConstants.GRID_CELL_SIZE, GameConstants.GRID_CELL_SIZE);
             }
         };
-    }
-
-    private JButton createHelpButton() {
-        JButton button = new JButton(GameConstants.Resources.HELP_ICON);
-        button.setToolTipText("Controls:\n→←↑↓ Movement\nESC Pause\nSPACE Themes");
-        styleButton(button);
-        return button;
-    }
-
-
-    private void styleButton(JButton button) {
-        button.setBorderPainted(false);
-        button.setContentAreaFilled(false);
-        button.setFocusPainted(false);
-    }
-
-    public void updateScore() {
-        scoreLabel.setText("Score: " + gameState.getScore());
-        if (gameState.getScore() == gameState.getHighScore()) {
-            updateHighScore();
-        }
-    }
-
-    public void updateHighScore() {
-        highScoreLabel.setText("High Score: " + gameState.getHighScore());
     }
 }
