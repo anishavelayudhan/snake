@@ -35,14 +35,8 @@ public class GameController {
     }
 
     public void processInput() {
-       Direction currentDirection = gameState.getSnake().getDirection();
-       Direction newDirection;
-
-        while ((newDirection = directionQueue.poll()) != null) {
-            if (newDirection.isValidDirection(currentDirection)) {
-                gameState.getSnake().setDirection(newDirection);
-                break;
-            }
+        if (!directionQueue.isEmpty())  {
+            gameState.getSnake().setDirection(directionQueue.poll());
         }
 
         gameState.getSnake().move();
@@ -102,7 +96,10 @@ public class GameController {
         private void queueDirection(Direction newDirection) {
             if (gameState.isPaused()) return;
 
-            directionQueue.add(newDirection);
+            if (directionQueue.isEmpty() && gameState.getSnake().getDirection().isValidDirection(newDirection)
+                    || !directionQueue.isEmpty() && directionQueue.peekLast().isValidDirection(newDirection)) {
+                directionQueue.add(newDirection);
+            }
         }
     }
 }
